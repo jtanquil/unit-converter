@@ -1,0 +1,46 @@
+html
+  head
+    title="Unit Converter"
+  body
+    section
+      h2="Unit Converter"
+      
+      ul
+        - for (let unitType of ["length", "weight", "temperature"]) {
+        -   if (unitType !== locals.unitType) {
+              li
+                a(href=`/${unitType}`)=unitType[0].toUpperCase() + unitType.slice(1)
+        -    } else {
+                li=unitType[0].toUpperCase() + unitType.slice(1)
+        -    }
+        -  }
+
+      form(method="post" action=`/${locals.unitType}`)
+        label(for="unconverted")="Enter the length to convert"
+        input(type="text" name="unconverted")
+        br
+        label(for="convertFrom")="Unit to Convert from"
+        input(type="text" name="convertFrom")
+        br
+        label(for="convertTo")="Unit to Convert to"
+        input(type="text" name="convertTo")
+        br
+        input(type="submit" value="Convert")
+    
+    section
+      h2="Unit Converter"
+
+      ul
+        - for (let unitType of ["length", "weight", "temperature"]) {
+        -   if (unitType !== locals.unitType) {
+              li=unitType[0].toUpperCase() + unitType.slice(1)
+        -    } else {
+                li
+                  b=unitType[0].toUpperCase() + unitType.slice(1)
+        -    }
+        -  }
+
+      p="Result of your calculation"
+
+      form(method="get" action="/")
+        input(type="submit" value="Reset")
