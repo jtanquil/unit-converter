@@ -16,14 +16,24 @@ html
         -  }
 
       form(method="post" action=`/${locals.unitType}`)
-        label(for="unconverted")="Enter the length to convert"
-        input(type="text" name="unconverted")
+        label(for="unconvertedAmount")="Enter the length to convert"
+        input(
+          type="number" 
+          name="unconvertedAmount" 
+          required
+          value=`${("unconvertedAmount" in locals) ? locals.unconvertedAmount : ""}`)
         br
         label(for="convertFrom")="Unit to Convert from"
-        input(type="text" name="convertFrom")
+        select(name="convertFrom")
+          - for (let unit of locals.units) {
+            option(value=`${unit}`)=`${unit[0].toUpperCase() + unit.slice(1)}`
+          - }
         br
         label(for="convertTo")="Unit to Convert to"
-        input(type="text" name="convertTo")
+        select(name="convertTo")
+          - for (let unit of locals.units) {
+            option(value=`${unit}`)=`${unit[0].toUpperCase() + unit.slice(1)}`
+          - }
         br
         input(type="submit" value="Convert")
     
@@ -40,7 +50,11 @@ html
         -    }
         -  }
 
-      p="Result of your calculation"
+      p="Result of your calculation:"
 
-      form(method="get" action="/")
+      - if ("convertedAmount" in locals) {
+          p=`${locals.unconvertedAmount} ${(locals.unconvertedAmount !== 1) ? locals.pluralizer(locals.convertFrom) : locals.convertFrom} = ${locals.convertedAmount} ${(locals.convertedAmount !== 1) ? locals.pluralizer(locals.convertTo) : locals.convertTo}`
+      - }
+
+      form(method="get" action=`/${locals.unitType}`)
         input(type="submit" value="Reset")
