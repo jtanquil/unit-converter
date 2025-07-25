@@ -10,6 +10,7 @@ app.set('view engine', 'pug');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use('/public', express.static('public'));
 
 // url validation middleware
 app.use('/:unitType', (req, res, next) => {

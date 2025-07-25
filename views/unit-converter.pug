@@ -1,60 +1,66 @@
 html
   head
     title="Unit Converter"
+    link(rel="stylesheet" href="/public/reset.css")
+    link(rel="stylesheet" href="/public/style.css")
   body
-    section
-      h2="Unit Converter"
+    main
+      section
+        h1="Unit Converter"
+        
+        nav
+          ul
+            - for (let unitType of ["length", "weight", "temperature"]) {
+            -   if (unitType !== locals.unitType) {
+                  li
+                    a(href=`/${unitType}`)=unitType[0].toUpperCase() + unitType.slice(1)
+            -    } else {
+                    li(class="selected")
+                      b=unitType[0].toUpperCase() + unitType.slice(1)
+            -    }
+            -  }
+
+        form(method="post" action=`/${locals.unitType}`)
+          label(for="unconvertedAmount")="Enter the length to convert:"
+          input(
+            type="number" 
+            name="unconvertedAmount" 
+            required
+            value=`${("unconvertedAmount" in locals) ? locals.unconvertedAmount : ""}`)
+          
+          label(for="convertFrom")="Unit to convert from:"
+          select(name="convertFrom")
+            - for (let unit of locals.units) {
+              option(value=`${unit}`)=`${unit[0].toUpperCase() + unit.slice(1)}`
+            - }
+          
+          label(for="convertTo")="Unit to convert to:"
+          select(name="convertTo")
+            - for (let unit of locals.units) {
+              option(value=`${unit}`)=`${unit[0].toUpperCase() + unit.slice(1)}`
+            - }
+          
+          input(type="submit" value="Convert")
       
-      ul
-        - for (let unitType of ["length", "weight", "temperature"]) {
-        -   if (unitType !== locals.unitType) {
-              li
-                a(href=`/${unitType}`)=unitType[0].toUpperCase() + unitType.slice(1)
-        -    } else {
-                li=unitType[0].toUpperCase() + unitType.slice(1)
-        -    }
-        -  }
+      section
+        h1="Unit Converter"
+        
+        nav
+          ul
+            - for (let unitType of ["length", "weight", "temperature"]) {
+            -   if (unitType !== locals.unitType) {
+                  li=unitType[0].toUpperCase() + unitType.slice(1)
+            -    } else {
+                    li(class="selected")
+                      b=unitType[0].toUpperCase() + unitType.slice(1)
+            -    }
+            -  }
 
-      form(method="post" action=`/${locals.unitType}`)
-        label(for="unconvertedAmount")="Enter the length to convert"
-        input(
-          type="number" 
-          name="unconvertedAmount" 
-          required
-          value=`${("unconvertedAmount" in locals) ? locals.unconvertedAmount : ""}`)
-        br
-        label(for="convertFrom")="Unit to Convert from"
-        select(name="convertFrom")
-          - for (let unit of locals.units) {
-            option(value=`${unit}`)=`${unit[0].toUpperCase() + unit.slice(1)}`
-          - }
-        br
-        label(for="convertTo")="Unit to Convert to"
-        select(name="convertTo")
-          - for (let unit of locals.units) {
-            option(value=`${unit}`)=`${unit[0].toUpperCase() + unit.slice(1)}`
-          - }
-        br
-        input(type="submit" value="Convert")
-    
-    section
-      h2="Unit Converter"
+        p="Result of your calculation:"
 
-      ul
-        - for (let unitType of ["length", "weight", "temperature"]) {
-        -   if (unitType !== locals.unitType) {
-              li=unitType[0].toUpperCase() + unitType.slice(1)
-        -    } else {
-                li
-                  b=unitType[0].toUpperCase() + unitType.slice(1)
-        -    }
-        -  }
+        - if ("convertedAmount" in locals) {
+            p(class="result")=`${locals.unconvertedAmount} ${(locals.unconvertedAmount !== 1) ? locals.pluralizer(locals.convertFrom) : locals.convertFrom} = ${locals.convertedAmount} ${(locals.convertedAmount !== 1) ? locals.pluralizer(locals.convertTo) : locals.convertTo}`
+        - }
 
-      p="Result of your calculation:"
-
-      - if ("convertedAmount" in locals) {
-          p=`${locals.unconvertedAmount} ${(locals.unconvertedAmount !== 1) ? locals.pluralizer(locals.convertFrom) : locals.convertFrom} = ${locals.convertedAmount} ${(locals.convertedAmount !== 1) ? locals.pluralizer(locals.convertTo) : locals.convertTo}`
-      - }
-
-      form(method="get" action=`/${locals.unitType}`)
-        input(type="submit" value="Reset")
+        form(method="get" action=`/${locals.unitType}`)
+          input(type="submit" value="Reset")
